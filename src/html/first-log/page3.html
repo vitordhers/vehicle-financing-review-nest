@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<title>Online HTML Editor</title>
+
+<head>
+</head>
+<style>
+    body {
+        background-color: #fff;
+        padding: 15px;
+    }
+
+    .head {
+        bottom-padding: 50px;
+    }
+
+    .col-wrapper {
+        display: flex;
+        justify-content: space-between;
+        gap: 0px 15px
+    }
+</style>
+
+<body>
+    {{#if isFirstPage}}
+    <h3>Relatório das Diferenças</h3>
+    {{/if isFirstPage}}
+    <table>
+        <thead>
+            <tr>
+                <th>Nº</th>
+                <th>Vencto</th>
+                <th>Valor Corrigido da Prestação</th>
+                <th>Valor Pago</th>
+                <th>Diferença</th>
+                <th>Correção(%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each paymentDifferences}}
+            <tr>
+                <td>{{this.n}}</td>
+                <td>{{this.dueDateStr}}</td>
+                <td>{{this.revisedInstallment.installmentTotal}}</td>
+                <td>{{this.actualInstallment.installmentTotal}}</td>
+                <td>{{this.installmentDifference}}</td>
+                <td>{{this.installmentDifferencePct}}</td>
+            </tr>
+            {{/each}}
+            {{#if isLastPage}}
+            <tr>
+                <td colspan=2><b>Totais</b></td>
+                <td>{{revisedInstallmentsTotal}}</td>
+                <td>{{effectiveInstallmentsTotal}}</td>
+                <td>{{differenceTotal}}</td>
+            </tr>
+            {{/if}}
+        </tbody>
+    </table>
+</body>
+
+</html>

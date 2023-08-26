@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<title>Online HTML Editor</title>
+
+<head>
+</head>
+<style>
+    body {
+        background-color: #fff;
+        padding: 15px;
+    }
+
+    .head {
+        bottom-padding: 50px;
+    }
+
+    .col-wrapper {
+        display: flex;
+        justify-content: space-between;
+        gap: 0px 15px
+    }
+</style>
+
+<body>
+    <section class="head">
+        <p>Antonio Costa</p>
+        <p>Endereço</p>
+        <p>Telefone</p>
+        <p>Email</p>
+    </section>
+    <h4>Parmâmetros de Cálculo</h4>
+    <section class="col-wrapper">
+        <div>
+            <p><b>Data do contrato:</b> {{contractDateStr}}</p>
+            <p><b>Nome do autor:</b> {{clientName}}</p>
+            <p><b>Nome do réu:</b> {{bankName}}</p>
+            <p><b>Valor financiado:</b> R$ {{totalLoaned}}</p>
+            <p><b>Nº de Prestações:</b> {{installments}}</p>
+            <p><b>Período Carência:</b> {{gracePeriod}}</p>
+            <p><b>Data da primeira prestação:</b> {{firstInstallmentDueDateStr}}</p>
+            <p><b>Carência:</b> {{gracePeriod}}</p>
+        </div>
+        <div>
+            <p><b>Método do cálculo:</b> Table Price</p>
+            <p><b>Valor original da primeira prestação:</b> {{firstInstallmentValue}}</p>
+            <p><b>Valor revisado da primeira prestação:</b> {{revisedFirstInstallmentValue}}</p>
+            <p><b>Taxa média do juros BACEN:</b> 2.00% a.m.</p>
+            <p><b>Taxa de juros contratada:</b> {{effectiveInterestRate}}% a.m.</p>
+        </div>
+    </section>
+</body>
+
+</html>

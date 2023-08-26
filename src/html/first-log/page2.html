@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<title>Online HTML Editor</title>
+
+<head>
+</head>
+<style>
+    body {
+        background-color: #fff;
+        padding: 15px;
+    }
+
+    .head {
+        bottom-padding: 50px;
+    }
+
+    .col-wrapper {
+        display: flex;
+        justify-content: space-between;
+        gap: 0px 15px
+    }
+</style>
+
+<body>
+    {{#if isFirstPage}}
+    <h3>Cálculo da Prestação Revisada pela Taxa Média</h3>
+    {{/if isFirstPage}}
+    <table>
+        <thead>
+            <tr>
+                <th>Nº</th>
+                <th>Vencto</th>
+                <th>Saldo atualizado</th>
+                <th>Valor da Prestação</th>
+                <th>Valor dos Juros</th>
+                <th>Valor da Amortização</th>
+                <th>Saldo Devedor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each}}
+            <tr>
+                <td>{{this.n}}</td>
+                <td>{{this.dueDateStr}}</td>
+                <td>{{this.updatedBalance}}</td>
+                <td>{{this.installmentTotal}}</td>
+                <td>{{this.interestTotal}}</td>
+                <td>{{this.amortizationTotal}}</td>
+                <td>{{this.debtBalance}}</td>
+            </tr>
+            {{/each}}
+            {{#if isLastPage}}
+            <tr>
+                <td colspan=3><b>Totais</b></td>
+                <td>{{totalInstallments}}</td>
+                <td>{{totalInterests}}</td>
+                <td colspan=2>{{totalAmortizations}}</td>
+            </tr>
+            {{/if}}
+        </tbody>
+    </table>
+</body>
+
+</html>
