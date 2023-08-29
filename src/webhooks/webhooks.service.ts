@@ -7,14 +7,13 @@ import {
 import { SimulationDto } from './models/simulation-dto.model';
 import { ConfigService } from '@nestjs/config';
 import { banks } from './interfaces/bank.interface';
-import { getDaysDifference } from './functions/getDaysDifference.function';
-import { calculateDailyInterestRate } from './functions/getDailyInterestRate.function';
 import { calculateAmortizingPayments } from './functions/calculateAmortizingPayments.function';
 import { createDateFromDDMMYYYY } from './functions/createDateFromDDMMYYYY.function';
 import { calculateMonthlyInterestRate } from './functions/calculateMonthlyInterestRate.function';
 import { mapRevisedPaymentToCashflow } from './functions/mapRevisedPaymentToCashflow.function';
 import { DbService } from 'src/db/db.service';
 import { SaveReviewDto } from 'src/db/models/save-review.model';
+import { InterestRateService } from 'src/interest-rate/interest-rate.service';
 
 @Injectable()
 export class WebhooksService implements OnModuleInit {
@@ -22,6 +21,7 @@ export class WebhooksService implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService,
     private readonly dbService: DbService,
+    private readonly interestRateService: InterestRateService,
   ) {}
 
   onModuleInit() {
@@ -29,13 +29,12 @@ export class WebhooksService implements OnModuleInit {
   }
 
   async analyzeLoan(data: SimulationDto, token: string) {
-    // if (token !== this.webhookToken) {
-    //   throw new UnauthorizedException('Invalid validation token');
-    // }
+    if (token !== this.webhookToken) {
+      throw new UnauthorizedException('Invalid validation token');
+    }
 
     const {
       clientName,
-      identityType,
       bankDocument,
       contractDate: contractStartDate,
       firstInstallmentDueDate: firstInstallmentDate,
@@ -53,6 +52,9 @@ export class WebhooksService implements OnModuleInit {
       );
     }
 
+    const referenceInterestRate =
+      await this.interestRateService.getReferenceInterestRate();
+
     // const contractDate = new Date(contractStartDate);
     const contractDate = createDateFromDDMMYYYY(contractStartDate);
     // const firstInstallmentDueDate = new Date(firstInstallmentDate);
@@ -64,7 +66,7 @@ export class WebhooksService implements OnModuleInit {
       totalLoaned,
       installments,
       dueDay,
-      foundBank.monthlyInterestRate / 100,
+      referenceInterestRate.interestRateReference / 100,
       contractDate,
       firstInstallmentDueDate,
     );
@@ -75,6 +77,10 @@ export class WebhooksService implements OnModuleInit {
     );
 
     const interestRate = calculateMonthlyInterestRate(actualCashflows);
+
+    if (interestRate <= 0) {
+      throw new BadRequestException('Please, insert correct data');
+    }
 
     const saveReviewData = new SaveReviewDto(
       clientName,

@@ -42,4 +42,43 @@ export class DbService implements OnModuleInit {
       this.logger.error(`saveReviewData error: ${inspect({ error })}`);
     }
   }
+
+  async updateReferenceInterestRate(updatedReferenceInterestRate: number) {
+    const docRef = this.db.collection('interest_rate').doc('1');
+    const updateDto = {
+      updatedAt: new Date(),
+      interestRateReference: updatedReferenceInterestRate,
+    };
+    try {
+      const result = await docRef.set(updateDto);
+      this.logger.log(
+        `Reference Interest Rate updated at ${result.writeTime
+          .toDate()
+          .toLocaleDateString('pt-br')}`,
+      );
+      return true;
+    } catch (error) {
+      this.logger.error(
+        `updateReferenceInterestRate error: ${inspect({ error })}`,
+      );
+      return false;
+    }
+  }
+
+  async getReferenceInterestRate() {
+    const docRef = this.db.collection('interest_rate').doc('1');
+
+    try {
+      const result = await docRef.get();
+
+      return result as unknown as {
+        updatedAt: firebase.firestore.Timestamp;
+        interestRateReference: number;
+      };
+    } catch (error) {
+      this.logger.error(
+        `getReferenceInterestRate error: ${inspect({ error })}`,
+      );
+    }
+  }
 }
