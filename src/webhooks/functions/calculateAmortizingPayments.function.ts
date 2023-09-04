@@ -1,3 +1,4 @@
+import { inspect } from 'util';
 import { Payment } from '../interfaces/payment.interface';
 import { getGracePeriod } from './getGracePeriod.function';
 import { roundToDecimals } from './roundToDecimals';
@@ -66,6 +67,8 @@ export const calculateAmortizingPayments = (
 
     payments.push(payment);
   }
+
+  // console.log(inspect({ payments }));
 
   return payments;
 };

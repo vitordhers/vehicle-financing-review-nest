@@ -8,12 +8,6 @@ export interface Bank {
 
 export const banks: Bank[] = [
   {
-    document: '00.000.000/0000-00',
-    name: 'TEST BANK',
-    monthlyInterestRate: 2.0,
-    effectiveYearlyInterestRate: 26.48,
-  },
-  {
     document: '02.992.446/0001-75',
     name: 'BANCO CNH INDUSTRIAL CAPITAL S.A',
     code: 'M19',
@@ -165,12 +159,6 @@ export const banks: Bank[] = [
     name: 'AYMORÉ CFI S.A.',
     monthlyInterestRate: 1.9,
     effectiveYearlyInterestRate: 25.36,
-  },
-  {
-    document: '01.852.137/0001-37',
-    name: 'BCO BRASILEIRO DE CRÉDITO S.A.',
-    monthlyInterestRate: 1.95,
-    effectiveYearlyInterestRate: 26.02,
   },
   {
     document: '01.852.137/0001-37',

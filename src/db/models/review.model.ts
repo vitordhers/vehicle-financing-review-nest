@@ -4,7 +4,6 @@ export class Review {
   public bankDocument: string;
   public contractStartDate: Date;
   public firstInstallmentDate: Date;
-  public firstInstallmentValue: number;
   public totalLoaned: number;
   public installments: number;
   public installmentValue: number;

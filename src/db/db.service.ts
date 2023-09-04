@@ -69,8 +69,8 @@ export class DbService implements OnModuleInit {
     const docRef = this.db.collection('interest_rate').doc('1');
 
     try {
-      const result = await docRef.get();
-
+      const snapshot = await docRef.get();
+      const result = snapshot.data();
       return result as unknown as {
         updatedAt: firebase.firestore.Timestamp;
         interestRateReference: number;

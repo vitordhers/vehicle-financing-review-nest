@@ -14,6 +14,7 @@ import { mapRevisedPaymentToCashflow } from './functions/mapRevisedPaymentToCash
 import { DbService } from 'src/db/db.service';
 import { SaveReviewDto } from 'src/db/models/save-review.model';
 import { InterestRateService } from 'src/interest-rate/interest-rate.service';
+import { inspect } from 'util';
 
 @Injectable()
 export class WebhooksService implements OnModuleInit {
@@ -35,25 +36,23 @@ export class WebhooksService implements OnModuleInit {
 
     const {
       clientName,
-      bankDocument,
+      bankName,
       contractDate: contractStartDate,
       firstInstallmentDueDate: firstInstallmentDate,
-      firstInstallmentValue,
       totalLoaned,
       installments,
       installmentValue,
       paidInstallments,
     } = data;
 
-    const foundBank = banks.find((bank) => bank.document === bankDocument);
+    const foundBank = banks.find((bank) => bank.name === bankName);
     if (!foundBank) {
-      return new BadRequestException(
-        `Bank with document ${bankDocument} wasn't found`,
-      );
+      return new BadRequestException(`Bank  ${bankName} wasn't found`);
     }
 
     const referenceInterestRate =
       await this.interestRateService.getReferenceInterestRate();
+    console.log({ referenceInterestRate });
 
     // const contractDate = new Date(contractStartDate);
     const contractDate = createDateFromDDMMYYYY(contractStartDate);
@@ -71,31 +70,36 @@ export class WebhooksService implements OnModuleInit {
       firstInstallmentDueDate,
     );
 
+    console.log(inspect({ revisedPayments }));
+
     const actualCashflows = mapRevisedPaymentToCashflow(
       revisedPayments,
       installmentValue,
     );
 
+    // console.log(inspect({ actualCashflows }));
+
     const interestRate = calculateMonthlyInterestRate(actualCashflows);
+
+    return interestRate;
 
     if (interestRate <= 0) {
       throw new BadRequestException('Please, insert correct data');
     }
 
-    const saveReviewData = new SaveReviewDto(
-      clientName,
-      bankDocument,
-      contractDate,
-      firstInstallmentDueDate,
-      firstInstallmentValue,
-      totalLoaned,
-      installments,
-      installmentValue,
-      paidInstallments,
-      interestRate,
-    );
+    // const saveReviewData = new SaveReviewDto(
+    //   clientName,
+    //   foundBank.document,
+    //   contractDate,
+    //   firstInstallmentDueDate,
+    //   totalLoaned,
+    //   installments,
+    //   installmentValue,
+    //   paidInstallments,
+    //   interestRate,
+    // );
 
-    const uuid = await this.dbService.saveReviewData(saveReviewData);
-    return uuid;
+    // const uuid = await this.dbService.saveReviewData(saveReviewData);
+    // return uuid;
   }
 }
